@@ -11,7 +11,6 @@ from utils import get_repeated_surface
 class Floor(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        pygame.sprite.Sprite.__init__(self)
         self.base = ImageLoader().get_image("base")
 
         self.image = get_repeated_surface(self.base, WIDTH)

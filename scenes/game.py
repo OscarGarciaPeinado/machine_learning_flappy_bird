@@ -2,10 +2,9 @@ import pygame
 import sys
 
 from config import *
-from interactor.c_event import CEvent
 
 
-class Game(CEvent):
+class Game():
     def __init__(self):
         pygame.display.set_caption(GAME_NAME)
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
