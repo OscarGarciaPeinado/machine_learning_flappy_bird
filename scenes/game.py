@@ -1,10 +1,7 @@
 import pygame
 import sys
-from pygame.locals import *
 
 from config import *
-from entities.floor import Floor
-from entities.bird import Bird
 from interactor.c_event import CEvent
 
 
@@ -31,12 +28,12 @@ class Game(CEvent):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.quit()
-
             self.scene.on_event()
 
             self.scene.on_update()
 
             self.scene.on_draw(self.screen)
+
             pygame.display.flip()
 
     def change_scene(self, scene):
