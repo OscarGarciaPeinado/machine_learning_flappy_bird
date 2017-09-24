@@ -2,6 +2,7 @@ import pygame
 import sys
 
 from config import *
+from scenes.play_scene import PlayScene
 
 
 class Game():
@@ -20,14 +21,15 @@ class Game():
     def loop(self):
         while not self.quit_flag:
             time = self.clock.tick(FPS)
-
+            # self.scene.time = time
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.quit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.quit()
-            self.scene.on_event()
+                    else:
+                        self.scene.on_event(event)
 
             self.scene.on_update()
 
