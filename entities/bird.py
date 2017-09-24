@@ -16,7 +16,7 @@ class Bird(pygame.sprite.Sprite):
     jump_acc = -10
 
     jumping = False
-
+    dead = False
     sprite_rate_index = 0
 
     def __init__(self, base_y, name=None):
@@ -47,13 +47,15 @@ class Bird(pygame.sprite.Sprite):
 
     def refresh(self):
         self.change_flap_sprite()
-        time = self.clock.tick(FPS)
 
         if self.y_vel < self.max_y_vel and not self.jumping:
             self.y_vel += self.GRAVITY_ACC
         if self.jumping:
             self.jumping = False
+
         self.y += min(self.y_vel, self.base_y - self.y - self.image.get_height())
+        if self.y >= self.base_y - self.image.get_height():
+            self.dead = True
 
     def down(self):
         pass
