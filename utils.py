@@ -16,3 +16,9 @@ def get_repeated_surface(image, width):
         cropped.blit(image, (x, 0))
         x += image.get_width()
     return cropped
+
+
+def rotate_center(image, rect, angle):
+    rot_image = pygame.transform.rotate(image, angle)
+    rot_rect = rot_image.get_rect(center=rect.center)
+    return rot_image, rot_rect

@@ -8,7 +8,7 @@ from entities.score import Score
 from repository.image_loader import ImageLoader
 from scenes.scene import Scene
 from random import randint
-from utils import root_path, get_repeated_surface
+from utils import root_path, get_repeated_surface, rotate_center
 
 
 class PlayScene(Scene):
@@ -47,24 +47,28 @@ class PlayScene(Scene):
         if event.type == pygame.KEYDOWN and (event.key == pygame.K_SPACE or event.key == pygame.K_UP):
             self.bird.jump()
 
-    from random import randint
-
     def on_draw(self, screen):
-        for lower_pipes in self.pipes:
+        for lower_pipes, upper_pipes in self.pipes:
             screen.blit(lower_pipes["image"], (lower_pipes["x"], lower_pipes["y"]))
+            screen.blit(upper_pipes["image"], (upper_pipes["x"], upper_pipes["y"]))
 
         screen.blit(self.floor.image, (self.floor.x, self.floor.y))
         screen.blit(self.bird.image, (self.bird.x, self.bird.y))
         self.score.draw(screen)
 
     def refresh_pipes(self):
-        if GAME_WIDTH - self.pipes[-1]["x"] > 170:
+        if GAME_WIDTH - self.pipes[-1][0]["x"] > 170:
             self.create_pipe()
-        for lower_pipes in self.pipes:
+        for lower_pipes, upper_pipes in self.pipes:
             lower_pipes["x"] -= MAP_SPEED
+            upper_pipes["x"] -= MAP_SPEED
 
     def create_pipe(self):
         lower_pipe = self.image_loader.get_image("pipe-green.png")
         x = GAME_WIDTH + lower_pipe.get_width()
         y = HEIGHT - lower_pipe.get_height()
-        self.pipes.append({"image": lower_pipe, "x": x, "y": y + randint(-100, 100)})
+        y = y + randint(-100, 100)
+
+        upper_pipe, upper_rect = rotate_center(lower_pipe, lower_pipe.get_rect(), 180)
+        self.pipes.append(({"image": lower_pipe, "x": x, "y": y},
+                           {"image": upper_pipe, "x": x, "y": y - 100 - upper_pipe.get_height()}))
