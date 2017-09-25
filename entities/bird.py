@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-from config import WIDTH, HEIGHT, FPS
+from config import WIDTH, HEIGHT, FPS, GAME_WIDTH
 from repository.image_loader import ImageLoader
 
 
@@ -35,7 +35,7 @@ class Bird(pygame.sprite.Sprite):
         self.image = mid_flap
 
         self.rect = self.image.get_rect()
-        self.x = WIDTH / 2 - self.image.get_width()
+        self.x = GAME_WIDTH / 2 - self.image.get_width()
         self.y = HEIGHT / 2 - self.image.get_height()
         self.name = name
 
