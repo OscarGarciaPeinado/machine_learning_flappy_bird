@@ -18,6 +18,8 @@ class Bird(pygame.sprite.Sprite):
     dead = False
     sprite_rate_index = 0
 
+    score = 0
+
     def __init__(self, base_y, name=None):
         pygame.sprite.Sprite.__init__(self)
 
@@ -55,7 +57,6 @@ class Bird(pygame.sprite.Sprite):
         self.rect.y += min(self.y_vel, self.base_y - self.rect.y - self.image.get_height())
         if self.rect.y >= self.base_y - self.image.get_height():
             self.dead = True
-
 
     def jump(self):
         self.jumping = True

@@ -24,7 +24,7 @@ class PlayScene(Scene):
         self.initialize_score()
 
     def initialize_score(self):
-        self.score = Score(GAME_WIDTH, WIDTH - GAME_WIDTH)
+        self.score = Score(GAME_WIDTH, WIDTH - GAME_WIDTH, [self.bird])
 
     def initialize_pipes(self):
         self.pipes = []
@@ -43,6 +43,7 @@ class PlayScene(Scene):
         self.bird.refresh()
         self.refresh_pipes()
         self.check_collision()
+        self.refresh_birds_score()
 
     def on_event(self, event):
         if event.type == pygame.KEYDOWN and (event.key == pygame.K_SPACE or event.key == pygame.K_UP):
@@ -86,3 +87,8 @@ class PlayScene(Scene):
         for lower_pipe, upper_pipe in self.pipes:
             if lower_pipe["rect"].colliderect(self.bird.rect) or upper_pipe["rect"].colliderect(self.bird.rect):
                 self.bird.dead = True
+
+    def refresh_birds_score(self):
+        pipe_rect = self.pipes[0][0]["rect"]
+        if not self.bird.dead and pipe_rect.x + pipe_rect.width < GAME_WIDTH / 2:
+            self.bird.score += 1
