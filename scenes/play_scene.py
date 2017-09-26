@@ -42,6 +42,7 @@ class PlayScene(Scene):
         self.floor.next()
         self.bird.refresh()
         self.refresh_pipes()
+        self.check_collision()
 
     def on_event(self, event):
         if event.type == pygame.KEYDOWN and (event.key == pygame.K_SPACE or event.key == pygame.K_UP):
@@ -49,19 +50,22 @@ class PlayScene(Scene):
 
     def on_draw(self, screen):
         for lower_pipes, upper_pipes in self.pipes:
-            screen.blit(lower_pipes["image"], (lower_pipes["x"], lower_pipes["y"]))
-            screen.blit(upper_pipes["image"], (upper_pipes["x"], upper_pipes["y"]))
+            screen.blit(lower_pipes["image"], (lower_pipes["rect"].x, lower_pipes["rect"].y))
+            screen.blit(upper_pipes["image"], (upper_pipes["rect"].x, upper_pipes["rect"].y))
 
         screen.blit(self.floor.image, (self.floor.x, self.floor.y))
-        screen.blit(self.bird.image, (self.bird.x, self.bird.y))
+        if not self.bird.dead:
+            screen.blit(self.bird.image, self.bird.rect)
         self.score.draw(screen)
 
     def refresh_pipes(self):
-        if GAME_WIDTH - self.pipes[-1][0]["x"] > 170:
+        if GAME_WIDTH - self.pipes[-1][0]["rect"].x > 170:
             self.create_pipe()
         for lower_pipes, upper_pipes in self.pipes:
-            lower_pipes["x"] -= MAP_SPEED
-            upper_pipes["x"] -= MAP_SPEED
+            lower_pipes["rect"].x -= MAP_SPEED
+            upper_pipes["rect"].x -= MAP_SPEED
+
+        self.pipes = [pipes for pipes in self.pipes if pipes[0]["rect"].x + pipes[0]["rect"].width > 0]
 
     def create_pipe(self):
         lower_pipe = self.image_loader.get_image("pipe-green.png")
@@ -69,6 +73,16 @@ class PlayScene(Scene):
         y = HEIGHT - lower_pipe.get_height()
         y = y + randint(-100, 100)
 
+        lower_rect = lower_pipe.get_rect()
+        lower_rect.x, lower_rect.y = (x, y)
+
         upper_pipe, upper_rect = rotate_center(lower_pipe, lower_pipe.get_rect(), 180)
-        self.pipes.append(({"image": lower_pipe, "x": x, "y": y},
-                           {"image": upper_pipe, "x": x, "y": y - 100 - upper_pipe.get_height()}))
+        upper_rect.x, upper_rect.y = (x, y - 100 - upper_pipe.get_height())
+
+        self.pipes.append(({"image": lower_pipe, "rect": lower_rect},
+                           {"image": upper_pipe, "rect": upper_rect}))
+
+    def check_collision(self):
+        for lower_pipe, upper_pipe in self.pipes:
+            if lower_pipe["rect"].colliderect(self.bird.rect) or upper_pipe["rect"].colliderect(self.bird.rect):
+                self.bird.dead = True

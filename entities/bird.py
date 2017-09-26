@@ -6,7 +6,6 @@ from repository.image_loader import ImageLoader
 
 
 class Bird(pygame.sprite.Sprite):
-    state = ""
     sprite_index = 0
 
     GRAVITY_ACC = 1
@@ -35,8 +34,8 @@ class Bird(pygame.sprite.Sprite):
         self.image = mid_flap
 
         self.rect = self.image.get_rect()
-        self.x = GAME_WIDTH / 2 - self.image.get_width()
-        self.y = HEIGHT / 2 - self.image.get_height()
+        self.rect.x = GAME_WIDTH / 2 - self.image.get_width()
+        self.rect.y = HEIGHT / 2 - self.image.get_height()
         self.name = name
 
     def change_flap_sprite(self):
@@ -53,12 +52,10 @@ class Bird(pygame.sprite.Sprite):
         if self.jumping:
             self.jumping = False
 
-        self.y += min(self.y_vel, self.base_y - self.y - self.image.get_height())
-        if self.y >= self.base_y - self.image.get_height():
+        self.rect.y += min(self.y_vel, self.base_y - self.rect.y - self.image.get_height())
+        if self.rect.y >= self.base_y - self.image.get_height():
             self.dead = True
 
-    def down(self):
-        pass
 
     def jump(self):
         self.jumping = True
