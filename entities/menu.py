@@ -15,9 +15,9 @@ class Menu(pygame.Surface):
 
     def __init__(self, width):
         pygame.Surface.__init__(self, (width, HEIGHT), pygame.SRCALPHA, 32)
-        start = OptionMenu("Start", x=(WIDTH / 2), y=(HEIGHT / 3))
-        self.menu_options = {"start": start}
-        self.select_option = "start"
+        start = OptionMenu("Manual", x=(WIDTH / 2), y=(HEIGHT / 3))
+        self.menu_options = {"Manual": start}
+        self.select_option = "Manual"
         self.set_header((width / 2))
         image_loader = ImageLoader()
         self.arrow = image_loader.get_image("arrow.png").convert_alpha()
