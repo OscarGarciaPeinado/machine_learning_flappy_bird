@@ -3,12 +3,10 @@ import pygame
 from config import WIDTH, HEIGHT, GAME_WIDTH, MAP_SPEED
 from entities.bird import Bird
 from entities.floor import Floor
-from entities.menu import Menu
+from entities.pipes import Pipes
 from entities.score import Score
 from repository.image_loader import ImageLoader
 from scenes.scene import Scene
-from random import randint
-from utils import rotate_center
 
 
 class PlayScene(Scene):
@@ -28,7 +26,8 @@ class PlayScene(Scene):
 
     def initialize_pipes(self):
         self.pipes = []
-        self.create_pipe()
+        pipes = Pipes(GAME_WIDTH, HEIGHT, MAP_SPEED)
+        self.pipes.append(pipes)
 
     def initialize_flappy(self):
         self.bird = Bird(base_y=HEIGHT - self.floor.image.get_height(), name="1")
@@ -50,9 +49,8 @@ class PlayScene(Scene):
             self.bird.jump()
 
     def on_draw(self, screen):
-        for lower_pipes, upper_pipes, visited in self.pipes:
-            screen.blit(lower_pipes["image"], (lower_pipes["rect"].x, lower_pipes["rect"].y))
-            screen.blit(upper_pipes["image"], (upper_pipes["rect"].x, upper_pipes["rect"].y))
+        for pipes in self.pipes:
+            pipes.draw(screen)
 
         screen.blit(self.floor.image, (self.floor.x, self.floor.y))
         if not self.bird.dead:
@@ -60,39 +58,24 @@ class PlayScene(Scene):
         self.score.draw(screen)
 
     def refresh_pipes(self):
-        if GAME_WIDTH - self.pipes[-1][0]["rect"].x > 170:
-            self.create_pipe()
-        for lower_pipes, upper_pipes, visited in self.pipes:
-            lower_pipes["rect"].x -= MAP_SPEED
-            upper_pipes["rect"].x -= MAP_SPEED
+        if GAME_WIDTH - self.pipes[-1].get_x() > 170:
+            pipes = Pipes(GAME_WIDTH, HEIGHT, MAP_SPEED)
+            self.pipes.append(pipes)
+        for pipes in self.pipes:
+            pipes.increase_x()
 
-        self.pipes = [pipes for pipes in self.pipes if pipes[0]["rect"].x + pipes[0]["rect"].width > 0]
-
-    def create_pipe(self):
-        lower_pipe = self.image_loader.get_image("pipe-green.png")
-        x = GAME_WIDTH + lower_pipe.get_width()
-        y = HEIGHT - lower_pipe.get_height()
-        y = y + randint(-100, 100)
-
-        lower_rect = lower_pipe.get_rect()
-        lower_rect.x, lower_rect.y = (x, y)
-
-        upper_pipe, upper_rect = rotate_center(lower_pipe, lower_pipe.get_rect(), 180)
-        upper_rect.x, upper_rect.y = (x, y - 100 - upper_pipe.get_height())
-
-        self.pipes.append([{"image": lower_pipe, "rect": lower_rect},
-                           {"image": upper_pipe, "rect": upper_rect}, False])
+        self.pipes = [pipes for pipes in self.pipes if pipes.get_x() + pipes.get_width() > 0]
 
     def check_collision(self):
-        for lower_pipe, upper_pipe, visited in self.pipes:
-            if lower_pipe["rect"].colliderect(self.bird.rect) or upper_pipe["rect"].colliderect(self.bird.rect):
+        for pipes in self.pipes:
+            if pipes.is_collision(self.bird.rect):
                 self.bird.dead = True
 
     def refresh_birds_score(self):
-        lower_pip, upper_pipe, visited = next(pipe for pipe in self.pipes if not pipe[2])
-        if not self.bird.dead and lower_pip["rect"].x + lower_pip["rect"].width < GAME_WIDTH / 2:
-            for index, pipes in enumerate(self.pipes):
-                if not pipes[2]:
-                    self.pipes[index][2] = True
+        first_not_visited_pipe = next(pipes for pipes in self.pipes if not pipes.visited)
+        if not self.bird.dead and first_not_visited_pipe.get_x() + first_not_visited_pipe.get_width() < GAME_WIDTH / 2:
+            for pipes in self.pipes:
+                if not pipes.visited:
+                    pipes.visited = True
                     break
             self.bird.score += 1

@@ -1,7 +1,6 @@
 import pygame
-from pygame.locals import *
 
-from config import WIDTH, HEIGHT, FPS, GAME_WIDTH
+from config import HEIGHT, GAME_WIDTH
 from repository.image_loader import ImageLoader
 
 
