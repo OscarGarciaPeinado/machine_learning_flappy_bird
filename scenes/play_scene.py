@@ -64,6 +64,7 @@ class PlayScene(Scene):
     def check_collision(self):
         for pipes in self.pipes:
             self.flappy_engine.check_pipes_collision(pipes)
+        self.flappy_engine.check_floor_collision(self.floor)
 
     def refresh_birds_score(self):
         first_not_visited_pipe = next(pipes for pipes in self.pipes if not pipes.visited)
