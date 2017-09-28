@@ -4,5 +4,14 @@ class FlappyMlEngine:
     def get_birds(self):
         raise NotImplementedError
 
-    def on_update(self, distance_x, distance_y):
+    def on_update(self, next_pipe_x, next_pipe_y):
+        raise NotImplementedError
+
+    def check_pipes_collision(self, pipes):
+        raise NotImplementedError
+
+    def draw(self, screen):
+        raise NotImplementedError
+
+    def on_event(self, event):
         raise NotImplementedError
