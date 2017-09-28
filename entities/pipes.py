@@ -21,9 +21,11 @@ class Pipes:
 
         lower_rect = lower_pipe.get_rect()
         lower_rect.x, lower_rect.y = (x, y)
+        lower_rect.inflate(-2, -2)
 
         upper_pipe, upper_rect = rotate_center(lower_pipe, lower_pipe.get_rect(), 180)
         upper_rect.x, upper_rect.y = (x, y - 100 - upper_pipe.get_height())
+        upper_rect.inflate(-2, -2)
 
         return lower_pipe, lower_rect, upper_pipe, upper_rect
 

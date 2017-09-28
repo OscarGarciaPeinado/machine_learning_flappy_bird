@@ -19,7 +19,7 @@ class Bird(pygame.sprite.Sprite):
 
     score = 0
 
-    def __init__(self, name=None):
+    def __init__(self, name=None, y=HEIGHT / 2):
         pygame.sprite.Sprite.__init__(self)
 
         mid_flap = ImageLoader().get_image("redbird-midflap.png")
@@ -33,8 +33,7 @@ class Bird(pygame.sprite.Sprite):
         self.image = mid_flap
 
         self.rect = self.image.get_rect()
-        self.rect.x = GAME_WIDTH / 2 - self.image.get_width()
-        self.rect.y = HEIGHT / 2 - self.image.get_height()
+        self.rect.center = (GAME_WIDTH / 2, y)
         self.name = name
 
     def change_flap_sprite(self):
@@ -51,10 +50,7 @@ class Bird(pygame.sprite.Sprite):
         if self.jumping:
             self.jumping = False
 
-        # self.rect.y += min(self.y_vel, self.base_y - self.rect.y - self.image.get_height())
         self.rect.y += self.y_vel
-        # if self.rect.y >= self.base_y - self.image.get_height():
-        #     self.dead = True
 
     def jump(self):
         self.jumping = True

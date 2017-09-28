@@ -34,5 +34,5 @@ class ManualFlappyEngine(FlappyMlEngine):
 
     def check_floor_collision(self, floor):
         for bird in self.birds:
-            if floor.rect.colliderect(bird.rect):
+            if floor.rect.y < bird.rect.centery:
                 bird.dead = True
