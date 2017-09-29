@@ -31,7 +31,7 @@ class Game():
                     else:
                         self.scene.on_event(event)
 
-            self.scene.on_update()
+            self.scene.on_update(time)
 
             self.scene.on_draw(self.screen)
 

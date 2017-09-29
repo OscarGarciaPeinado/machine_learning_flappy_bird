@@ -18,6 +18,7 @@ class Bird(pygame.sprite.Sprite):
     sprite_rate_index = 0
 
     score = 0
+    distance = 0
 
     def __init__(self, name=None, y=HEIGHT / 2):
         pygame.sprite.Sprite.__init__(self)
@@ -25,8 +26,6 @@ class Bird(pygame.sprite.Sprite):
         mid_flap = ImageLoader().get_image("redbird-midflap.png")
         up_flap = ImageLoader().get_image("redbird-upflap.png")
         down_flap = ImageLoader().get_image("redbird-downflap.png")
-
-        self.clock = pygame.time.Clock()
 
         self.flap_sprites = [mid_flap, down_flap, mid_flap, up_flap]
 

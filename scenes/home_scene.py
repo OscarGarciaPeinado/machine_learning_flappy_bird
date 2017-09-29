@@ -21,7 +21,7 @@ class HomeScene(Scene):
     def initialize_menu(self):
         self.menu = Menu(WIDTH)
 
-    def on_update(self):
+    def on_update(self, time):
         self.floor.refresh()
         self.menu.next()
 
