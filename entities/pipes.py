@@ -32,6 +32,9 @@ class Pipes:
     def get_x(self):
         return self.lower_rect.x
 
+    def get_y(self):
+        return self.lower_rect.y
+
     def get_width(self):
         return self.lower_rect.width
 

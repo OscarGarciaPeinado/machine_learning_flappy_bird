@@ -37,7 +37,8 @@ class PlayScene(Scene):
     def on_update(self, time):
         self.game.screen.fill((0, 153, 204))
         self.floor.refresh()
-        self.flappy_engine.on_update(1, 1)
+        next_pipe = next(pipes for pipes in self.pipes if not pipes.visited)
+        self.flappy_engine.on_update(next_pipe.get_x(), next_pipe.get_y())
         self.refresh_pipes()
         self.check_collision()
         self.refresh_birds_score()
